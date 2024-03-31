@@ -64,6 +64,15 @@ CREATE TABLE products(
     foreign KEY (category_id) references categories(id)
 );
 
+--anh san pham
+CREATE Table product_images(
+    id INT PRIMARY key AUTO_INCREMENT,
+    product_id INT,
+    foreign KEY (product_id) references products(id),
+    constraint fk_product_images_product_id 
+        foreign key (product_id) references products (id) on delete cascade
+)
+
 --Orders
 CREATE TABLE orders(
     id INT PRIMARY KEY AUTO_INCREMENT,
