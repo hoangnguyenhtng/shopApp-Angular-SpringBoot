@@ -70,7 +70,9 @@ CREATE Table product_images(
     product_id INT,
     foreign KEY (product_id) references products(id),
     constraint fk_product_images_product_id 
-        foreign key (product_id) references products (id) on delete cascade
+        foreign key (product_id) references products (id) on delete cascade,
+    image_url VARCHAR(300)
+
 )
 
 --Orders
