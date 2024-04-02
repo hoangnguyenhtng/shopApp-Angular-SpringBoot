@@ -1,6 +1,11 @@
 package com.project.shopapp.controllers;
 import com.project.shopapp.dtos.ProductDTO;
+import com.project.shopapp.dtos.ProductImageDTO;
+import com.project.shopapp.models.Product;
+import com.project.shopapp.models.ProductImage;
+import com.project.shopapp.services.iProductService;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -21,8 +26,11 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("${api.prefix}/products")
+@AllArgsConstructor
 
 public class ProductController {
+    private final iProductService productService;
+
     @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     //POST: http://localhost:8088/api/v1/products
     public ResponseEntity<?> createProduct(
@@ -39,6 +47,7 @@ public class ProductController {
                         .toList();
                 return ResponseEntity.badRequest().body(errorMessages);
             }
+            Product newProduct = productService.createProduct(productDTO);
             List<MultipartFile> files = productDTO.getFiles();
             files = files == null? new ArrayList<MultipartFile>() : files;
             for (MultipartFile file : files){
@@ -59,9 +68,13 @@ public class ProductController {
                 //Luu file va cap nhat thumbnail trong DTO
                 String filename = storeFile(file); //Thay the ham nay voi code cua ban de luu file
                 //Luu vao product trong database
-                //Luu vao bang product_image
+                ProductImage productImage = productService.createProductImage(
+                        newProduct.getId(),
+                        ProductImageDTO.builder()
+                                .imageUrl(filename)
+                                .build()
+                );
             }
-
             return ResponseEntity.ok("Product created successfully");
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
