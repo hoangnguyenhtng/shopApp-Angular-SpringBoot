@@ -8,9 +8,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
+
 @Service
 @RequiredArgsConstructor
-public class CategoryService implements iCategoryService{
+public class CategoryService implements iCategoryService {
     private final CategoryRepository categoryRepository;
 
     @Override

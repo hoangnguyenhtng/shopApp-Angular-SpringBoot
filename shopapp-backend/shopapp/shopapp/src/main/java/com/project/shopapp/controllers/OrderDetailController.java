@@ -13,20 +13,20 @@ public class OrderDetailController {
     @PostMapping
     public ResponseEntity<?> createOrderDetail(
             @Valid @RequestBody OrderDetailDTO newOrderDetail
-            ){
+    ) {
         return ResponseEntity.ok("Create Order Detail");
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getOrderDetail(
-            @Valid @PathVariable("id") Long id){
+            @Valid @PathVariable("id") Long id) {
         return ResponseEntity.ok("Get order detail with ID " + id
         );
     }
 
     @GetMapping("/order/{orderId}")
     //lay danh sach order detail cua 1 order
-    public ResponseEntity<?> getOrderDetails(@Valid @PathVariable("orderId") Long orderId){
+    public ResponseEntity<?> getOrderDetails(@Valid @PathVariable("orderId") Long orderId) {
         return ResponseEntity.ok("order Details with id " + orderId);
     }
 
@@ -34,13 +34,13 @@ public class OrderDetailController {
     public ResponseEntity<?> updateOrderDetail(
             @Valid @PathVariable("id") Long id,
             @RequestBody OrderDetailDTO newOrderDetailData
-    ){
+    ) {
         return ResponseEntity.ok("update Order Detail with ID = " + id + ", new Order Detail Data: " + newOrderDetailData);
     }
 
     @DeleteMapping("/{id}")
     //Bat buoc tham so truyen vao phai la Void hoac Object
-    public ResponseEntity<Void> deleteOrderDetails(@Valid @PathVariable("id") Long id){
+    public ResponseEntity<Void> deleteOrderDetails(@Valid @PathVariable("id") Long id) {
         return ResponseEntity.noContent().build();
     }
 }

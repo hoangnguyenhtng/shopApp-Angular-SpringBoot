@@ -35,10 +35,10 @@ public class OrderController {
     //http://localhost:8088/api/v1/orders/4
     public ResponseEntity<?> getOrders(
             @Valid @PathVariable("user_id") Long user_id
-    ){
-        try{
-            return ResponseEntity.ok("Get all orders from user with ID:" + user_id );
-        } catch (Exception e){
+    ) {
+        try {
+            return ResponseEntity.ok("Get all orders from user with ID:" + user_id);
+        } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
@@ -49,12 +49,12 @@ public class OrderController {
     public ResponseEntity<?> updateOrders(
             @Valid @PathVariable long id,
             @Valid @RequestBody OrderDTO orderDTO
-    ){
+    ) {
         return ResponseEntity.ok("Update order information");
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteOrder(@Valid @PathVariable Long id){
+    public ResponseEntity<String> deleteOrder(@Valid @PathVariable Long id) {
         //Xoa -> Cap nhat truong active thanh false
         return ResponseEntity.ok("Delete order successfully");
     }

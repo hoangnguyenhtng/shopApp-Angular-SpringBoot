@@ -22,31 +22,33 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserController {
     private final iUserService userService;
+
     @PostMapping("/register")
     public ResponseEntity<?> createUser(
             @Valid @RequestBody UserDTO userDTO,
             BindingResult result
-    ){
-        try{
-            if(result.hasErrors()){
+    ) {
+        try {
+            if (result.hasErrors()) {
                 List<String> errorMessages = result.getFieldErrors()
                         .stream()
                         .map(FieldError::getDefaultMessage)
                         .toList();
                 return ResponseEntity.badRequest().body(errorMessages);
             }
-            if(!userDTO.getPassword().equals(userDTO.getRetypePassword())){
+            if (!userDTO.getPassword().equals(userDTO.getRetypePassword())) {
                 return ResponseEntity.badRequest().body("Password does not match");
             }
             userService.createUser(userDTO);
             return ResponseEntity.ok("Register successfully");
-        } catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
+
     @PostMapping("/login")
     public ResponseEntity<String> login(
-            @Valid @RequestBody UserLoginDTO userLoginDTO){
+            @Valid @RequestBody UserLoginDTO userLoginDTO) {
         //Kiem tra thong tin dang nhap va sinh token
         String token = userService.login(userLoginDTO.getPhoneNumber(), userLoginDTO.getPassword());
         //Tra ve token trong response

@@ -12,14 +12,15 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class UserService implements iUserService{
+public class UserService implements iUserService {
     private UserRepository userRepository;
     private RoleRepository roleRepository;
+
     @Override
     public User createUser(UserDTO userDTO) throws DataNotFoundException {
         String phoneNumber = userDTO.getPhoneNumber();
         //Kiem tra so dien thoai da ton tai chua
-        if(userRepository.existsByPhoneNumber(phoneNumber)){
+        if (userRepository.existsByPhoneNumber(phoneNumber)) {
             throw new DataIntegrityViolationException("Phone number already exist");
         }
         //convert from userDTO -> user
@@ -36,7 +37,7 @@ public class UserService implements iUserService{
                 .orElseThrow(() -> new DataNotFoundException("Role not found"));
         newUser.setRole(role);
         //Kiem tra neu co accountID, khong yeu cau password
-        if(userDTO.getFacebookAccountId() == 0 && userDTO.getGoogleAccountId() == 0){
+        if (userDTO.getFacebookAccountId() == 0 && userDTO.getGoogleAccountId() == 0) {
             String password = userDTO.getPassword();
             //String encodedPassword = passwordEncoder.encode(password);
             //spring security

@@ -9,8 +9,12 @@ import java.util.List;
 @Service
 public interface iCategoryService {
     Category createCategory(CategoryDTO category);
+
     Category getCategoryById(long id);
+
     List<Category> getAllCategories();
+
     Category updateCategory(long categoryId, CategoryDTO category);
+
     void deleteCategory(long id);
 }

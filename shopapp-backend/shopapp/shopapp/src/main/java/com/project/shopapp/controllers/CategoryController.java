@@ -26,8 +26,8 @@ public class CategoryController {
     @PostMapping("")
     public ResponseEntity<?> createCategories(
             @Valid @RequestBody CategoryDTO categoryDTO,
-            BindingResult result){
-        if(result.hasErrors()){
+            BindingResult result) {
+        if (result.hasErrors()) {
             List<String> errorMessages = result.getFieldErrors()
                     .stream()
                     .map(FieldError::getDefaultMessage)
@@ -37,12 +37,13 @@ public class CategoryController {
         categoryService.createCategory(categoryDTO);
         return ResponseEntity.ok("Insert category successfully");
     }
+
     //Hien thi tat ca categories
     @GetMapping("") //http://localhost:8088/api/v1/categories?page=1&limit=10
     public ResponseEntity<List> getAllCategories(
-            @RequestParam("page")   int page,
-            @RequestParam("limit")  int limit
-    ){
+            @RequestParam("page") int page,
+            @RequestParam("limit") int limit
+    ) {
         List<Category> categories = categoryService.getAllCategories();
         return ResponseEntity.ok(categories);
     }
@@ -51,13 +52,13 @@ public class CategoryController {
     public ResponseEntity<String> updateCategories(
             @PathVariable Long id,
             @Valid @RequestBody CategoryDTO categoryDTO
-            ){
+    ) {
         categoryService.updateCategory(id, categoryDTO);
         return ResponseEntity.ok("Update category successful");
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteCategories(@PathVariable Long id){
+    public ResponseEntity<String> deleteCategories(@PathVariable Long id) {
         categoryService.deleteCategory(id);
         return ResponseEntity.ok("Delete category with id " + id + " successfully");
     }

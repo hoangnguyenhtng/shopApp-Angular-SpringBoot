@@ -29,7 +29,7 @@ public class Order {
     @Column(name = "email", length = 100)
     private String email;
 
-    @Column(name = "phone_number",nullable = false, length = 20)
+    @Column(name = "phone_number", nullable = false, length = 20)
     private String phoneNumber;
 
     @Column(name = "address", length = 300)

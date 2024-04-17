@@ -14,7 +14,7 @@ import lombok.*;
 @Setter
 public class OrderDTO {
     @JsonProperty("user_id")
-    @Min(value = 0,message = "User ID must be >= 0")
+    @Min(value = 0, message = "User ID must be >= 0")
     private Long userId;
 
     @JsonProperty("fullname")
