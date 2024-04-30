@@ -1,7 +1,11 @@
 package com.project.shopapp.controllers;
 
 import com.project.shopapp.dtos.OrderDetailDTO;
+import com.project.shopapp.exceptions.DataNotFoundException;
+import com.project.shopapp.models.OrderDetail;
+import com.project.shopapp.services.OrderDetailService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -9,25 +13,36 @@ import java.util.List;
 
 @RestController
 @RequestMapping("${api.prefix}/order_details")
+@RequiredArgsConstructor
 public class OrderDetailController {
+    private final OrderDetailService orderDetailService;
     @PostMapping
     public ResponseEntity<?> createOrderDetail(
-            @Valid @RequestBody OrderDetailDTO newOrderDetail
+            @Valid @RequestBody OrderDetailDTO orderDetailDTO
     ) {
-        return ResponseEntity.ok("Create Order Detail");
+        try {
+            OrderDetail newOrderDetail = orderDetailService.createOrderDetail(orderDetailDTO);
+            return ResponseEntity.ok(newOrderDetail);
+
+        } catch (Exception e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getOrderDetail(
-            @Valid @PathVariable("id") Long id) {
-        return ResponseEntity.ok("Get order detail with ID " + id
-        );
+            @Valid @PathVariable("id") Long id) throws DataNotFoundException {
+        OrderDetail orderDetail = orderDetailService.getOrderDetail(id);
+        return ResponseEntity.ok(orderDetail);
     }
 
     @GetMapping("/order/{orderId}")
-    //lay danh sach order detail cua 1 order
-    public ResponseEntity<?> getOrderDetails(@Valid @PathVariable("orderId") Long orderId) {
-        return ResponseEntity.ok("order Details with id " + orderId);
+    //lay danh sach order detail cua 1 order nao do
+    public ResponseEntity<?> getOrderDetails(
+            @Valid @PathVariable("orderId") Long orderId
+    ) {
+        List<OrderDetail> orderDetails = orderDetailService.findByOrderId(orderId);
+        return ResponseEntity.ok(orderDetails);
     }
 
     @PutMapping("/{id}")

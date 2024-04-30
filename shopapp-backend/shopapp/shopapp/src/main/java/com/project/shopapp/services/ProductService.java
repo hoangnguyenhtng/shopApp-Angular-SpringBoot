@@ -53,19 +53,7 @@ public class ProductService implements iProductService {
     @Override
     public Page<ProductResponse> getAllProducts(PageRequest pageRequest) {
         //Lay danh sach san pham theo trang va gioi han
-        return productRepository.findAll(pageRequest).map(product -> {
-            ProductResponse productResponse = ProductResponse.builder()
-                        .name(product.getName())
-                        .price(product.getPrice())
-                        .thumbnail(product.getThumbnail())
-                        .description(product.getDescription())
-                        .categoryId(product.getCategory().getId())
-                        .build();
-            productResponse.setCreatedAt(product.getCreatedAt());
-            productResponse.setUpdatedAt(product.getUpdatedAt());
-            return productResponse;
-
-        });
+        return productRepository.findAll(pageRequest).map(ProductResponse::fromProduct); //method reference: tham chieu den phuong thuc tinh
     }
 
     @Override
