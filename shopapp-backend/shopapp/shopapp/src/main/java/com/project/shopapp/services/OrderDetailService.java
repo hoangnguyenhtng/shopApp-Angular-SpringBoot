@@ -8,7 +8,6 @@ import com.project.shopapp.models.Product;
 import com.project.shopapp.repositories.OrderDetailRepository;
 import com.project.shopapp.repositories.OrderRepository;
 import com.project.shopapp.repositories.ProductRepository;
-import com.project.shopapp.responses.ProductResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +29,7 @@ public class OrderDetailService implements iOrderDetailService{
                 .order(order)
                 .product(product)
                 .numberOfProducts(orderDetailDTO.getNumberOfProduct())
+                .price(orderDetailDTO.getPrice())
                 .totalMoney(orderDetailDTO.getTotalMoney())
                 .color(orderDetailDTO.getColor())
                 .build();
@@ -44,12 +44,25 @@ public class OrderDetailService implements iOrderDetailService{
     }
 
     @Override
-    public OrderDetail updateOrderDetail(Long id, OrderDetailDTO newOrderDetailData) {
-        return null;
+    public OrderDetail updateOrderDetail(Long id, OrderDetailDTO orderDetailData) throws DataNotFoundException {
+        //Tim xem order detail co ton tai khong
+        OrderDetail existingOrderDetail = orderDetailRepository.findById(id)
+                .orElseThrow(() -> new DataNotFoundException("Cannot find order detail with id: " + id));
+        Order existingOrder = orderRepository.findById(orderDetailData.getOrderId())
+                .orElseThrow(() -> new DataNotFoundException("Cannot find order with id: " + id));
+        Product existingProduct = productRepository.findById(orderDetailData.getProductId()).orElseThrow(() -> new DataNotFoundException("Not found product with id: " + orderDetailData.getProductId()));
+
+        existingOrderDetail.setPrice(orderDetailData.getPrice());
+        existingOrderDetail.setNumberOfProducts(orderDetailData.getNumberOfProduct());
+        existingOrderDetail.setTotalMoney(orderDetailData.getTotalMoney());
+        existingOrderDetail.setColor(orderDetailData.getColor());
+        existingOrderDetail.setOrder(existingOrder);
+        existingOrderDetail.setProduct(existingProduct);
+        return orderDetailRepository.save(existingOrderDetail);
     }
 
     @Override
-    public void deleteOrderDetail(Long id) {
+    public void deleteById(Long id) {
         orderDetailRepository.deleteById(id);
     }
 
