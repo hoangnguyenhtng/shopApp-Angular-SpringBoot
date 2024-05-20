@@ -60,18 +60,19 @@ public class UserService implements iUserService {
     public String login(String phoneNumber, String password) throws Exception {
         Optional<User> optionalUser = userRepository.findByPhoneNumber(phoneNumber);
         if(optionalUser.isEmpty()){
-            throw new DataNotFoundException("Invalid phonenumber / password");
+            throw new DataNotFoundException("Invalid phone number / password");
         }
         //return optionalUser.get(); //tra ra jwt token
         User existingUser = optionalUser.get();
         //check password
         if(existingUser.getFacebookAccountId() == 0 && existingUser.getGoogleAccountId() == 0){
             if(!passwordEncoder.matches(password, existingUser.getPassword())){
-                throw new BadCredentialsException("Wrond phone number or password!");
+                throw new BadCredentialsException("Wrong phone number or password!");
             }
         }
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                phoneNumber, password);
+                phoneNumber, password,
+                existingUser.getAuthorities());
         //authenticate with java spring security
         authenticationManager.authenticate(authenticationToken);
         return jwtTokenUtil.generateToken(existingUser);

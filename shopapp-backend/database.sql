@@ -21,6 +21,9 @@ CREATE Table roles(
     name varchar(20) not null
 );
 
+INSERT INTO roles(name)
+VALUES ("user")
+
 ALTER Table users add foreign KEY (role_id) references roles(id);
 
 CREATE TABLE tokens(
