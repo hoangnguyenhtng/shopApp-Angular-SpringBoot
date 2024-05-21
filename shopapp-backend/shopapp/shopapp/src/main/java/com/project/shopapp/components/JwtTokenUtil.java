@@ -76,4 +76,7 @@ public class JwtTokenUtil {
         Date expirationDate = this.extractClaim(token,Claims::getExpiration);
         return expirationDate.before(new Date());
     }
+    public String extractPhoneNumber(String token){
+        return extractClaim(token, Claims::getSubject);
+    }
 }
