@@ -5,7 +5,6 @@ import com.project.shopapp.models.Product;
 import jakarta.persistence.MappedSuperclass;
 import lombok.*;
 
-import java.time.LocalDateTime;
 
 @Data
 @Getter
