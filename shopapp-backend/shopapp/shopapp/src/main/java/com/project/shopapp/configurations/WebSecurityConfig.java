@@ -10,8 +10,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
-import static jdk.nashorn.internal.runtime.PropertyDescriptor.GET;
 import static org.springframework.http.HttpMethod.*;
 
 @Configuration
@@ -32,14 +30,42 @@ public class WebSecurityConfig {
                             String.format("%s/users/login", apiPrefix)
                     )
                     .permitAll()
-                    .requestMatchers(POST,
-                            String.format("%s/orders", apiPrefix)).hasAnyRole("USER","ADMIN")
-                    .requestMatchers(PUT,
-                            String.format("%s/orders", apiPrefix)).hasRole("ADMIN")
-                    .requestMatchers(DELETE,
-                            String.format("%s/orders", apiPrefix)).hasRole("ADMIN")
                     .requestMatchers(GET,
-                            String.format("%s/orders", apiPrefix)).hasAnyRole("USER","ADMIN")
+                            String.format("%s/categories?**", apiPrefix)).hasAnyRole("USER","ADMIN")
+                    .requestMatchers(POST,
+                            String.format("%s/categories/**", apiPrefix)).hasAnyRole("ADMIN")
+                    .requestMatchers(PUT,
+                            String.format("%s/categories/**", apiPrefix)).hasAnyRole("ADMIN")
+                    .requestMatchers(DELETE,
+                            String.format("%s/categories/**", apiPrefix)).hasAnyRole("ADMIN")
+
+                    .requestMatchers(GET,
+                            String.format("%s/products**", apiPrefix)).hasAnyRole("USER","ADMIN")
+                    .requestMatchers(POST,
+                            String.format("%s/products/**", apiPrefix)).hasAnyRole("ADMIN")
+                    .requestMatchers(PUT,
+                            String.format("%s/products/**", apiPrefix)).hasAnyRole("ADMIN")
+                    .requestMatchers(DELETE,
+                            String.format("%s/products/**", apiPrefix)).hasAnyRole("ADMIN")
+
+                    .requestMatchers(GET,
+                            String.format("%s/orderdetails/**", apiPrefix)).hasAnyRole("USER","ADMIN")
+                    .requestMatchers(POST,
+                            String.format("%s/orderdetails/**", apiPrefix)).hasAnyRole("ADMIN")
+                    .requestMatchers(PUT,
+                            String.format("%s/orderdetails/**", apiPrefix)).hasAnyRole("ADMIN")
+                    .requestMatchers(DELETE,
+                            String.format("%s/orderdetails/**", apiPrefix)).hasAnyRole("ADMIN")
+
+
+                    .requestMatchers(POST,
+                            String.format("%s/orders/**", apiPrefix)).hasAnyRole("USER","ADMIN")
+                    .requestMatchers(PUT,
+                            String.format("%s/orders/**", apiPrefix)).hasRole("ADMIN")
+                    .requestMatchers(DELETE,
+                            String.format("%s/orders/**", apiPrefix)).hasRole("ADMIN")
+                    .requestMatchers(GET,
+                            String.format("%s/orders/**", apiPrefix)).hasAnyRole("USER","ADMIN")
                     .anyRequest().authenticated();
 
         });

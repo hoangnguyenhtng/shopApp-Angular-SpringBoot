@@ -11,8 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.internal.Pair;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
@@ -50,23 +50,48 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             final String phoneNumber = jwtTokenUtil.extractPhoneNumber(token);
             if (phoneNumber != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 User userDetails = (User) userDetailsService.loadUserByUsername(phoneNumber);
-                if (jwtTokenUtil.validationToken(token, userDetails)) {
-                    UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                            userDetails,
-                            null,
-                            userDetails.getAuthorities()
-                    );
-                    authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                    SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-                }
-            }
-            filterChain.doFilter(request, response);
+                System.out.println("User roles: " + userDetails.getAuthorities());
 
+                if (jwtTokenUtil.validationToken(token, userDetails)) {
+                        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                                userDetails,
+                                null,
+                                userDetails.getAuthorities()
+                        );
+                        authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                    }
+                }
+                filterChain.doFilter(request, response);
         } catch (Exception e) {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorired");
         }
 
     }
+
+//    private boolean hasPermission(List<? extends GrantedAuthority> authorities, HttpServletRequest request) {
+//        String requestURI = request.getRequestURI();
+//        String requestMethod = request.getMethod();
+//
+//        // Chỉ cho phép người dùng với quyền "ADMIN" thực hiện DELETE trên /orders
+//        if (requestURI.contains("/orders") && requestMethod.equals("DELETE")) {
+//            return authorities.stream().anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
+//        }
+//
+//        // Chỉ cho phép người dùng với quyền "ADMIN" hoặc "USER" thực hiện PUT trên /orders
+//        if (requestURI.contains("/orders") && requestMethod.equals("PUT")) {
+//            return authorities.stream().anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
+//        }
+//
+//        // Chỉ cho phép người dùng với quyền "ADMIN" hoặc "USER" thực hiện GET trên /orders
+//        if (requestURI.contains("/orders") && requestMethod.equals("GET")) {
+//            return authorities.stream().anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN") || authority.getAuthority().equals("ROLE_USER"));
+//        }
+//
+//        // Thêm các quy tắc kiểm tra quyền khác tại đây
+//
+//        return true; // Cho phép truy cập nếu không có quy tắc nào khớp
+//    }
 
     private boolean isBypassToken(@NonNull HttpServletRequest request) {
         final List<Pair<String, String>> bypassTokens = Arrays.asList(

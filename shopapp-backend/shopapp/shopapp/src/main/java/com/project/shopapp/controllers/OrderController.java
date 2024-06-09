@@ -57,7 +57,7 @@ public class OrderController {
     ) {
         try {
             Order existingOrder = orderService.getOrder(orderId);
-            return ResponseEntity.ok(existingOrder);
+            return ResponseEntity.ok(existingOrder.getUser().getRole());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
