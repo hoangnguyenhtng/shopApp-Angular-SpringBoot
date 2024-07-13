@@ -40,7 +40,7 @@ public class UserController {
                 return ResponseEntity.badRequest().body(userDTO.getRetypePassword());
             }
             userService.createUser(userDTO);
-            return ResponseEntity.ok("Register successfully");
+            return ResponseEntity.ok("Register successfully!");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
